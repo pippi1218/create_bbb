@@ -76,17 +76,17 @@ int main(){
         if(s[2] == 1 && s[1] == 1){   		//センサ２とセンサ３(真ん中のセンサ)が２つとも白判定
             run_pwm(0,10000000,1);			//モータ２を正転（前に進行）
 			run_pwm(1,10000000,-1);			//モータ１を逆転（前に進行）
-            printf("前進\n");
+            printf("前進\r");
         }else if(s[2] == 1 && s[1] == 0){	//センサ２が黒判定、センサ３が白判定
             run_pwm(1,9000000,-1);			//モータ２を逆転（左に旋回）
-            printf("左旋回\n");
+            printf("左旋回\r");
         }else if(s[2] == 0 && s[1] == 1){	//センサ２が白判定、センサ３が黒判定
             run_pwm(0,9000000,1);			//モータ１を正転（右に旋回）
-            printf("右旋回\n");
+            printf("右旋回\r");
         }else{								
             run_pwm(0,0,0);					//モータ１を停止
             run_pwm(1,0,0);					//モータ２を停止
-            printf("停止中\n");	
+            printf("停止中\r");	
         }      
 
 
@@ -123,9 +123,7 @@ int line(int gpio_num){
     write(fd, "in", 2);
     close(fd);
 
-    //読み取る
-    // \r    
-
+    //読み取り
     while(1){
         fd = gpio_open(gpio_num, "value", O_RDONLY);
         read(fd, &c, 1);
