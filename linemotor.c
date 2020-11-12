@@ -82,24 +82,6 @@ int main(){
             printf("停止中\n");
         }      
 
-        
-        if(kbhit()) {
-			if(getchar()=='w')
-				s[1] = 1;
-                s[2] = 1;
-		}else if(kbhit()) {
-			if(getchar()=='a')	
-				s[1] = 1;
-                s[2] = 0;
-		}else if(kbhit()) {
-			if(getchar()=='d')	
-				s[1] = 0;
-                s[2] = 1;
-		}else if(kbhit()) {
-			if(getchar()=='s')	
-				s[1] = 0;
-                s[2] = 0;
-		}
 
 		//キー入力関数
 		if(kbhit()) {
