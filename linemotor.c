@@ -34,6 +34,7 @@ void run_pwm(int motor_num, int duty, int drive_mode); //モータ用出力関�
 void close_pwm(int motor_num);						   //PWM終了関数
 int kbhit(void);									   //キー入力関数
 int line(int gpio_num);								   //ライントレーサ関数
+void file_open(int gpio_num);
 
 /*********************************/
 //init_pwm(モータ番号)を呼び出して，初期化の設定を行う，モータ番号（0～接続個数-1）
@@ -48,7 +49,6 @@ int main()
 {
 	int i;
 	int s[4];
-
 	char *lineColor;
 	char *move;
 
@@ -57,6 +57,9 @@ int main()
 
 	for(i = 0; i < 4; i++){
 		gpio_export(gpio_num[i]);
+
+		file_open(gpio_num[i]);
+
 	}
 
 
@@ -108,8 +111,10 @@ int main()
 				move = "stop";
 			}
 
-			printf("センサ:%d 色:%s 状態:%s\n", s[i], lineColor, move);
+			printf("センサ:%d 色:%s 状態:%s\n", i+1, lineColor, move);
 		}
+
+		sleep(1);
 
 		//キー入力関数
 		if (kbhit())
@@ -133,16 +138,22 @@ int main()
 	return 0;
 }
 
-//ライントレース用関数
-int line(int gpio_num)
-{
+void file_open(int gpio_num){
 	int fd;
-	char c;
 
 	//directionへinの書き込み
 	fd = gpio_open(gpio_num, "direction", O_WRONLY);
 	write(fd, "in", 2);
 	close(fd);
+
+
+}
+
+//ライントレース用関数
+int line(int gpio_num)
+{
+	int fd;
+	char c;
 
 	//読み取り
 	fd = gpio_open(gpio_num, "value", O_RDONLY);
