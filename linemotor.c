@@ -34,7 +34,7 @@ void run_pwm(int motor_num, int duty, int drive_mode); //モータ用出力関�
 void close_pwm(int motor_num);						   //PWM終了関数
 int kbhit(void);									   //キー入力関数
 int line(int gpio_num);								   //ライントレーサ関数
-void file_open(int gpio_num);
+//void file_wopen(int gpio_num);
 
 /*********************************/
 //init_pwm(モータ番号)を呼び出して，初期化の設定を行う，モータ番号（0～接続個数-1）
@@ -58,8 +58,7 @@ int main()
 	for(i = 0; i < 4; i++){
 		gpio_export(gpio_num[i]);
 
-		file_open(gpio_num[i]);
-
+		// file_wopen(gpio_num[i]);
 	}
 
 
@@ -96,12 +95,14 @@ int main()
 			}
 			else if (s[2] == 0 && s[1] == 1)
 			{							 //センサ２が黒判定、センサ３が白判定
+				run_pwm(0, 9000000, 0); 
 				run_pwm(1, 9000000, -1); //モータ２を逆転（左に旋回）
 				move = "left";
 			}
 			else if (s[2] == 1 && s[1] == 0)
 			{							//センサ２が白判定、センサ３が黒判定
-				run_pwm(0, 9000000, 1); //モータ１を正転（右に旋回）
+				run_pwm(0, 9000000, 1);
+				run_pwm(1, 9000000, 0); //モータ１を正転（右に旋回）
 				move = "right";
 			}
 			else
@@ -111,10 +112,12 @@ int main()
 				move = "stop";
 			}
 
-			printf("センサ:%d 色:%s 状態:%s\n", i+1, lineColor, move);
+			printf("センサ:%d 色:%s\n", i+1, lineColor);
+			
 		}
+		printf("状態:%s\n",move);
+		usleep(500000);
 
-		sleep(1);
 
 		//キー入力関数
 		if (kbhit())
@@ -138,22 +141,30 @@ int main()
 	return 0;
 }
 
-void file_open(int gpio_num){
-	int fd;
+//inでgpio番号を開く関数
+// void file_wopen(int gpio_num){
+// 	int fd;
 
-	//directionへinの書き込み
-	fd = gpio_open(gpio_num, "direction", O_WRONLY);
-	write(fd, "in", 2);
-	close(fd);
+// 	//directionへinの書き込み
+// 	fd = gpio_open(gpio_num, "direction", O_WRONLY);
+// 	write(fd, "in", 2);
+// 	close(fd);
 
 
-}
+// }
+
+
+
 
 //ライントレース用関数
 int line(int gpio_num)
 {
 	int fd;
 	char c;
+
+	fd = gpio_open(gpio_num, "direction", O_WRONLY);
+	write(fd, "in", 2);
+	close(fd);
 
 	//読み取り
 	fd = gpio_open(gpio_num, "value", O_RDONLY);
