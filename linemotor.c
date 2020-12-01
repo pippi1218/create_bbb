@@ -34,16 +34,12 @@ void run_pwm(int motor_num, int duty, int drive_mode); //モータ用出力関�
 void close_pwm(int motor_num);						   //PWM終了関数
 int kbhit(void);									   //キー入力関数
 int line(int gpio_num);								   //ライントレーサ関数
-//void file_wopen(int gpio_num);
 
 /*********************************/
 //init_pwm(モータ番号)を呼び出して，初期化の設定を行う，モータ番号（0～接続個数-1）
 //run_pwm(int motor_num,int duty,int drive_mode)を呼びだして動かす．motor_num：モータ番号/duty：整数値/drive_mode：停止，正転，逆転
 //close_pwm(モータ番号)を呼び出して，終了の処理を実施
 /*********************************/
-
-//このプログラムは，モータ0番が常に停止している状態
-//モータ1番に関しては何もしていない
 
 int main()
 {
@@ -57,8 +53,6 @@ int main()
 
 	for(i = 0; i < 4; i++){
 		gpio_export(gpio_num[i]);
-
-		// file_wopen(gpio_num[i]);
 	}
 
 
@@ -140,21 +134,6 @@ int main()
 
 	return 0;
 }
-
-//inでgpio番号を開く関数
-// void file_wopen(int gpio_num){
-// 	int fd;
-
-// 	//directionへinの書き込み
-// 	fd = gpio_open(gpio_num, "direction", O_WRONLY);
-// 	write(fd, "in", 2);
-// 	close(fd);
-
-
-// }
-
-
-
 
 //ライントレース用関数
 int line(int gpio_num)
@@ -404,6 +383,5 @@ int kbhit(void)
 		ungetc(ch, stdin);
 		return 1;
 	}
-
 	return 0;
 }
