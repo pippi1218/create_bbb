@@ -15,6 +15,9 @@
 #define OCP_NUM 3 //ocp.▲の▲に該当する番号
 #define PWM_PERIOD 10000000
 #define BONE_CAPEMGR_NUM 9 //bone_capemgr.●の●に該当
+#define OUT_SPEED 6000000
+#define IN_SPEED 2000000
+#define SPEED 6000000
 /**************************/
 
 //各自の接続に応じて変更
@@ -82,20 +85,20 @@ int main()
 			//条件による走行
 			if (s[2] == 0 && s[1] == 0)//センサ２とセンサ３(真ん中のセンサ)が２つとも白判定
 			{							  
-				run_pwm(0, 10000000, 1);  //モータ1を正転（前に進行）
-				run_pwm(1, 10000000, -1); //モータ2を逆転（前に進行）
+				run_pwm(0, SPEED, 1);  //モータ1を正転（前に進行）
+				run_pwm(1, SPEED, -1); //モータ2を逆転（前に進行）
 				move = "go";
 			}
 			else if (s[2] == 0 && s[1] == 1)//センサ２が黒判定、センサ３が白判定
 			{							 
-				run_pwm(0, 9000000, 0); 
-				run_pwm(1, 9000000, -1); //モータ２を逆転（左に旋回）
+				run_pwm(0, IN_SPEED, 1); 
+				run_pwm(1, OUT_SPEED, -1); //モータ２を逆転（左に旋回）
 				move = "left";
 			}
 			else if (s[2] == 1 && s[1] == 0)//センサ２が白判定、センサ３が黒判定
 			{							
-				run_pwm(0, 9000000, 1); //モータ１を正転（右に旋回）
-				run_pwm(1, 9000000, 0);
+				run_pwm(0, OUT_SPEED, 1); //モータ１を正転（右に旋回）
+				run_pwm(1, IN_SPEED, -1);
 				move = "right";
 			}
 			else
@@ -109,7 +112,7 @@ int main()
 			
 		}
 		printf("状態:%s\n",move);
-		usleep(800000);
+		usleep(400000);
 
 
 		//キー入力関数
