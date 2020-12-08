@@ -15,6 +15,9 @@
 #define OCP_NUM 3 //ocp.▲の▲に該当する番号
 #define PWM_PERIOD 10000000
 #define BONE_CAPEMGR_NUM 9 //bone_capemgr.●の●に該当
+#define OUT_SPEED 6000000
+#define IN_SPEED 3000000
+#define SPEED 5000000
 /**************************/
 
 //各自の接続に応じて変更
@@ -22,7 +25,6 @@
 char PIN_PWM[2][7] = {{"P9_14"}, {"P9_22"}};	 //PWM有効化後の番号
 int pwm_pin_num[2] = {15, 16};					 //PWMに使用するのBBBピン番号
 int motor_gpio_num[2][2] = {{61, 60}, {65, 46}}; //モータで使用するGPIO番号
-
 int gpio_num[4] = {49, 115, 27, 47};
 /*************************/
 
@@ -47,7 +49,6 @@ int main()
 	int s[4];
 	char *lineColor;
 	char *move;
-	int count=0;
 
 	init_pwm(0);
 	init_pwm(1);
@@ -83,20 +84,20 @@ int main()
 			//条件による走行
 			if (s[2] == 0 && s[1] == 0)//センサ２とセンサ３(真ん中のセンサ)が２つとも白判定
 			{							  
-				run_pwm(0, 10000000, 1);  //モータ1を正転（前に進行）
-				run_pwm(1, 10000000, -1); //モータ2を逆転（前に進行）
+				run_pwm(0, SPEED, 1);  //モータ1を正転（前に進行）
+				run_pwm(1, SPEED, -1); //モータ2を逆転（前に進行）
 				move = "go";
 			}
-			else if (s[2] == 0 && s[1] == 1)//センサ２が黒判定、センサ３が白判定
-			{							 
-				run_pwm(0, 9000000, 0); 
-				run_pwm(1, 9000000, -1); //モータ２を逆転（左に旋回）
+			else if (s[2] == 0 && s[1] == 1)//センサ２が黒判定、センサ３が白判定(左旋回)
+			{
+				run_pwm(0, IN_SPEED, 1);  //前（遅い）
+				run_pwm(1, SPEED, -1); //前
 				move = "left";
 			}
-			else if (s[2] == 1 && s[1] == 0)//センサ２が白判定、センサ３が黒判定
+			else if (s[2] == 1 && s[1] == 0)//センサ２が白判定、センサ３が黒判定(右旋回)
 			{							
-				run_pwm(0, 9000000, 1); //モータ１を正転（右に旋回）
-				run_pwm(1, 9000000, 0);
+				run_pwm(0, SPEED, 1); //前
+				run_pwm(1, IN_SPEED, -1); //前（遅い）
 				move = "right";
 			}
 			else
@@ -110,19 +111,14 @@ int main()
 			
 		}
 		printf("状態:%s\n",move);
-		usleep(700000);
-		count++;
-
-		if(count > 4) break;
+		usleep(400000);
 
 		//キー入力関数
-		else if (kbhit())
+		if (kbhit())
 		{
 			if (getchar() == 'q') //「q」で終了
-				printf("止めるよ\n");
 				break;
 		}
-
 	}
 
 	run_pwm(0, 0, 0); //モータ１を停止
