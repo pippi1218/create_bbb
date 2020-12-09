@@ -80,7 +80,7 @@ int main()
 			{
 				lineColor = "white";
 			}
-
+			
 			//条件による走行
 			if (s[2] == 0 && s[1] == 0)//センサ２とセンサ３(真ん中のセンサ)が２つとも白判定
 			{							  
@@ -90,14 +90,14 @@ int main()
 			}
 			else if (s[2] == 0 && s[1] == 1)//センサ２が黒判定、センサ３が白判定(左旋回)
 			{
-				run_pwm(0, IN_SPEED, 1);  //前（遅い）
+				run_pwm(0, IN_SPEED, -1);  //前（遅い）
 				run_pwm(1, SPEED, -1); //前
 				move = "left";
 			}
 			else if (s[2] == 1 && s[1] == 0)//センサ２が白判定、センサ３が黒判定(右旋回)
 			{							
 				run_pwm(0, SPEED, 1); //前
-				run_pwm(1, IN_SPEED, -1); //前（遅い）
+				run_pwm(1, IN_SPEED, 1); //前（遅い）
 				move = "right";
 			}
 			else
