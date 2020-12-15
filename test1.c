@@ -15,10 +15,11 @@
 #define OCP_NUM 3 //ocp.▲の▲に該当する番号
 #define PWM_PERIOD 10000000
 #define BONE_CAPEMGR_NUM 9 //bone_capemgr.●の●に該当
-#define LHIGH_SPEED 2400000
-#define RHIGH_SPEED 2600000
-#define LSPEED 2000000
-#define RSPEED 2200000
+#define LHIGH_SPEED 3000000
+#define RHIGH_SPEED 3000000
+#define SPEED 4000000
+#define LSPEED 2400000
+#define RSPEED 3000000
 /**************************/
 
 //各自の接続に応じて変更
@@ -83,23 +84,83 @@ int main()
 			}
 
 			//条件による走行
-			if (s[2] == 0 && s[1] == 0)//
+			if (s[3] == 1 && s[2] == 0 && s[1] == 0 && s[0] == 1)//黒白白黒
 			{
 				run_pwm(0, LSPEED, 1);  //↑
 				run_pwm(1, RSPEED, -1); //↑
 				move = "go";//↑ ↑
 			}
-			else if (s[2] == 0 && s[1] == 1)//センサ２が黒判定、センサ３が白判定(左旋回)
+			else if (s[3] == 1 && s[2] == 0 && s[1] == 1 && s[0] == 1)//黒白黒黒
 			{					
-				run_pwm(0, 0, 0); //↓
-				run_pwm(1, RHIGH_SPEED, -1); //↑
-				move = "left";//↓ ↑
+				//run_pwm(0, 0, 0); //●
+				run_pwm(0, LSPEED, -1);  //↓
+				run_pwm(1, RSPEED, -1); //↑
+				move = "left";//● ↑
 			}
-			else if (s[2] == 1 && s[1] == 0)//センサ２が白判定、センサ３が黒判定(右旋回)
+			else if (s[3] == 1 && s[2] == 1 && s[1] == 0 && s[0] == 1)//黒黒白黒
+			{
+				run_pwm(0, LSPEED, 1); //↑
+				run_pwm(1, 0, 0); //●
+				move = "right";//↑ ●
+			}
+			else if(s[3] == 1 && s[2] == 1 && s[1] == 0 && s[0] == 0)//黒黒白白
+			{
+				run_pwm(0, LSPEED, 1); //↑
+				run_pwm(1, 0, 0); //●
+				move = "right";//↑ ●
+			}
+			else if(s[3] == 0 && s[2] == 0 && s[1] == 1 && s[0] == 1)//白白黒黒
+			{
+				run_pwm(0, 0, 0); //●
+				run_pwm(1, RSPEED, -1); //↑
+				move = "left";//● ↑
+			}
+			else if(s[3] == 0 && s[2] == 0 && s[1] == 0 && s[0] == 1)//白白白黒
+			{
+				run_pwm(0, LHIGH_SPEED, -1); //↓
+				run_pwm(1, RHIGH_SPEED, -1); //↑
+				move = "leftturn";//↓ ↑
+			}
+			else if(s[3] == 1 && s[2] == 0 && s[1] == 0 && s[0] == 0)//黒白白白
 			{
 				run_pwm(0, LHIGH_SPEED, 1); //↑
-				run_pwm(1, 0, 0); //↓
-				move = "right";//↑ ↓
+				run_pwm(1, RHIGH_SPEED, 1); //↓
+				move = "rightturn";//↑ ↓
+			}
+			else if(s[3] == 0 && s[2] == 1 && s[1] == 1 && s[0] == 1)//白黒黒黒
+			{
+				//run_pwm(0, LHIGH_SPEED, -1); //↓
+				//run_pwm(1, 0, 0); //●
+				//move = "leftturn";//↓ ●
+
+				run_pwm(0, SPEED, 1); //↑
+				run_pwm(1, SPEED, 1); //↓
+				move = "rightturn";//↑ ↓
+			}
+			else if(s[3] == 1 && s[2] == 1 && s[1] == 1 && s[0] == 0)//黒黒黒白
+			{
+				run_pwm(0, SPEED, 1); //↑
+				run_pwm(1, SPEED, 1); //↓
+				move = "rightturn";//↑ ↓
+			}
+			else if(s[3] == 1 && s[2] == 0 && s[1] == 1 && s[0] == 0)
+			{
+				run_pwm(0, LHIGH_SPEED, -1); //↓
+				run_pwm(1, RHIGH_SPEED, -1); //↑
+				move = "leftturn";//↓ ↑
+			}
+			else if(s[3] == 0 && s[2] == 1 && s[1] == 0 && s[0] == 1)
+			{
+				run_pwm(0, LHIGH_SPEED, 1); //↑
+				//run_pwm(1, RHIGH_SPEED, 1); //↓
+				run_pwm(1, 0, 0); //●
+				move = "rightturn";//↑ ●
+			}
+			else if(s[3] == 0 && s[2] == 0 && s[1] == 0 && s[0] == 0){
+				run_pwm(0, LHIGH_SPEED, 1); //↑
+				//run_pwm(1, RHIGH_SPEED, 1); //↓
+				run_pwm(1, 0 ,0);//●
+				move = "rightturn";//↑ ●
 			}
             else
 			{
