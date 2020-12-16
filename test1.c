@@ -15,11 +15,11 @@
 #define OCP_NUM 3 //ocp.▲の▲に該当する番号
 #define PWM_PERIOD 10000000
 #define BONE_CAPEMGR_NUM 9 //bone_capemgr.●の●に該当
-#define LHIGH_SPEED 3000000
-#define RHIGH_SPEED 3000000
+#define LHIGH_SPEED 3500000
+#define RHIGH_SPEED 3500000
 #define SPEED 4000000
-#define LSPEED 2400000
-#define RSPEED 3000000
+#define LSPEED 3000000
+#define RSPEED 3100000
 /**************************/
 
 //各自の接続に応じて変更
@@ -123,9 +123,9 @@ int main()
 			}
 			else if(s[3] == 1 && s[2] == 0 && s[1] == 0 && s[0] == 0)//黒白白白
 			{
-				run_pwm(0, LHIGH_SPEED, 1); //↑
-				run_pwm(1, RHIGH_SPEED, 1); //↓
-				move = "rightturn";//↑ ↓
+				run_pwm(0, SPEED, -1); //↓
+				run_pwm(1, SPEED, -1); //↑
+				move = "leftturn";//↑ ↓
 			}
 			else if(s[3] == 0 && s[2] == 1 && s[1] == 1 && s[0] == 1)//白黒黒黒
 			{
@@ -139,9 +139,13 @@ int main()
 			}
 			else if(s[3] == 1 && s[2] == 1 && s[1] == 1 && s[0] == 0)//黒黒黒白
 			{
-				run_pwm(0, SPEED, 1); //↑
-				run_pwm(1, SPEED, 1); //↓
-				move = "rightturn";//↑ ↓
+				//run_pwm(0, SPEED, 1); //↑
+				//run_pwm(1, SPEED, 1); //↓
+				//move = "rightturn";//↑ ↓
+
+				run_pwm(0, LHIGH_SPEED, -1); //↓
+				run_pwm(1, RHIGH_SPEED, -1); //↑
+				move = "leftturn";//↓ ↑
 			}
 			else if(s[3] == 1 && s[2] == 0 && s[1] == 1 && s[0] == 0)
 			{
